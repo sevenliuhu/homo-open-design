@@ -1,0 +1,186 @@
+# HOMO 技能适配器
+# 将 Open Design SKILL.md 协议桥接到 HOMO 215 个智能体部门体系
+# — 不包含 HOMO 核心代码和专利 —
+
+version: 1.0.0
+type: skill-adapter
+target: open-design-engine
+
+# ==========================================
+# 适配器配置
+# ==========================================
+adapter:
+  name: "HOMO × Open Design 技能桥"
+  description: |
+    将 Open Design 的 134 个设计技能、152 套设计系统、16 Agent CLI 检测
+    无缝桥接到 HOMO 10+ 部门体系。支持双向转换：
+    - SKILL.md → HOMO 部门技能格式
+    - HOMO 任务 → Open Design 引擎调用
+
+  # 入口点
+  entrypoints:
+    - trigger: "od:skill"
+      handler: route_to_homo_department
+      description: "将 OD 技能路由到对应 HOMO 部门"
+    - trigger: "homo:design"
+      handler: dispatch_to_open_design
+      description: "将 HOMO 设计任务派发给 OD 引擎"
+
+  # 工作流
+  workflow:
+    inbound:                    # HOMO → OD
+      - step: parse_intent       # 解析 HOMO 任务意图
+        inputs: [query, department, skill_group]
+      - step: map_to_skill       # 映射到 OD skill
+        config: department-mapping.yaml
+      - step: compose_prompt     # 构造 OD 引擎可用提示词
+        includes: [design_system, craft_rules]
+      - step: dispatch           # 派发给 OD daemon
+        target: open-design-daemon
+
+    outbound:                   # OD → HOMO
+      - step: parse_result       # 解析 OD 引擎输出
+      - step: format_for_homo    # 转换结果为 HOMO 格式
+      - step: deliver            # 投递到对应 HOMO 部门
+
+# ==========================================
+# 技能格式转换器
+# ==========================================
+converters:
+  skill_to_homo:
+    description: "将 SKILL.md 转换为 HOMO 部门技能文件"
+    rules:
+      - from: "name"
+        to: "name"
+        transform: none
+      - from: "description"
+        to: "description"
+        transform: none
+      - from: "triggers"
+        to: "triggers"
+        transform: none
+      - from: "od.mode"
+        to: "homo.department"
+        using: "mode_to_department_map"
+      - from: "od.mode"
+        to: "homo.category"
+        using: "mode_to_category_map"
+      - from: "od.design_system.requires"
+        to: "homo.requires_design_system"
+        transform: none
+      - from: "od.craft.requires"
+        to: "homo.craft_required"
+        transform: none
+      - body: "SKILL.md body"
+        to: "homo.workflow"
+        transform: "markdown_to_workflow"
+
+  homo_to_skill:
+    description: "将 HOMO 部门技能格式还原为 SKILL.md"
+    reverse: true
+
+# ==========================================
+# 依赖注入
+# ==========================================
+injection:
+  design_system:                # 设计系统注入
+    source: "{project_root}/design-systems/{brand}/DESIGN.md"
+    position: "system-prompt-prefix"
+    optional: true
+
+  craft:                        # 工艺规则注入
+    source: "{project_root}/craft/{section}.md"
+    position: "between-design-system-and-skill"
+    condition: "homo.craft_required contains section"
+
+  department_context:           # 部门上下文注入
+    source: "department-mapping.yaml"
+    position: "routing-layer"
+    description: "提供部门路由和技能组映射"
+
+# ==========================================
+# Agent 检测
+# ==========================================
+agent_detection:
+  path_scan:
+    - name: "claude-code"
+      bin: "claude"
+      check: "claude --version"
+    - name: "codex-cli"
+      bin: "codex"
+      check: "codex --version"
+    - name: "devin-terminal"
+      bin: "devin"
+      check: "devin --version"
+    - name: "cursor-agent"
+      bin: "cursor"
+      check: "cursor --version"
+    - name: "gemini-cli"
+      bin: "gemini"
+      check: "gemini --version"
+    - name: "opencode"
+      bin: "opencode"
+      check: "opencode --version"
+    - name: "qwen-code"
+      bin: "qwen"
+      check: "qwen --version"
+    - name: "qoder-cli"
+      bin: "qoder"
+      check: "qoder --version"
+    - name: "gh-copilot"
+      bin: "github-copilot-cli"
+      check: "github-copilot-cli --version"
+    - name: "hermes"
+      bin: "hermes"
+      check: "hermes --version"
+    - name: "kimi-cli"
+      bin: "kimi"
+      check: "kimi --version"
+    - name: "pi-cli"
+      bin: "pi"
+      check: "pi --version"
+    - name: "kiro-cli"
+      bin: "kiro"
+      check: "kiro --version"
+    - name: "kilo-cli"
+      bin: "kilo"
+      check: "kilo --version"
+    - name: "mistral-vibe"
+      bin: "mistral-vibe"
+      check: "mistral-vibe --version"
+    - name: "deepseek-tui"
+      bin: "deepseek-tui"
+      check: "deepseek-tui --version"
+
+  homo_runtime:
+    - name: "homo-core"
+      check: "homo --version"
+      agents_available: 215
+    - name: "homo-skills"
+      check: "homo skill list"
+      departments: 12
+      skill_groups: 50+
+
+# ==========================================
+# 生命周期钩子
+# ==========================================
+hooks:
+  on_install:
+    - action: "link_skills"
+      description: "建立 SKILL.md 到 HOMO 部门技能的软链"
+    - action: "scan_agents"
+      description: "扫描 PATH 检测可用 Agent CLI"
+    - action: "init_registry"
+      description: "初始化部门映射注册表"
+
+  on_update:
+    - action: "rescan_skills"
+      description: "重新扫描技能目录"
+    - action: "rebuild_mapping"
+      description: "重建部门映射缓存"
+
+  on_uninstall:
+    - action: "remove_links"
+      description: "移除软链"
+    - action: "clean_cache"
+      description: "清理缓存"

@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+# HOMO Agent CLI Detection Tool
+# 扫描 $PATH 检测可用的 Agent CLI
+# 参考 Open Design: docs/agent-adapters.md
+
+set -euo pipefail
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+detect_agent() {
+    local name="$1"
+    local binary="$2"
+    local version_cmd="$3"
+    if command -v "$binary" &>/dev/null 2>&1; then
+        local version
+        version=$(eval "$version_cmd" 2>/dev/null || echo "found")
+        printf '  "%s": {"status":"available","binary":"%s","version":"%s"}' "$name" "$binary" "$version"
+        return 0
+    else
+        printf '  "%s": {"status":"not_found","binary":"%s"}' "$name" "$binary"
+        return 1
+    fi
+}
+
+agents_json() {
+    echo '{'
+    local first=true
+    while IFS='|' read -r name binary version_cmd; do
+        [ "$first" = true ] && first=false || echo ','
+        detect_agent "$name" "$binary" "$version_cmd"
+    done <<EOF
+claude-code|claude|claude --version 2>/dev/null | head -1
+codex-cli|codex|codex --version 2>/dev/null | head -1
+devin-terminal|devin|devin --version 2>/dev/null | head -1
+cursor-agent|cursor|cursor --version 2>/dev/null | head -1
+gemini-cli|gemini|gemini --version 2>/dev/null | head -1
+opencode|opencode|opencode --version 2>/dev/null | head -1
+qwen-code|qwen|qwen --version 2>/dev/null | head -1
+qoder-cli|qoder|qoder --version 2>/dev/null | head -1
+github-copilot|github-copilot-cli|github-copilot-cli --version 2>/dev/null | head -1
+hermes|hermes|hermes --version 2>/dev/null | head -1
+kimi-cli|kimi|kimi --version 2>/dev/null | head -1
+pi-cli|pi|pi --version 2>/dev/null | head -1
+kiro-cli|kiro|kiro --version 2>/dev/null | head -1
+kilo-cli|kilo|kilo --version 2>/dev/null | head -1
+mistral-vibe|mistral-vibe|mistral-vibe --version 2>/dev/null | head -1
+deepseek-tui|deepseek-tui|deepseek-tui --version 2>/dev/null | head -1
+homo-runtime|homo|homo --version 2>/dev/null | head -1
+EOF
+    echo ''
+    echo '}'
+}
+
+agents_list() {
+    echo -e "${BLUE}═══ Agent CLI 检测结果 ═══${NC}"$'\n'
+    total=0
+    found=0
+    while IFS='|' read -r binary display; do
+        total=$((total+1))
+        if command -v "$binary" &>/dev/null 2>&1; then
+            echo -e "  ${GREEN}✅${NC} $display ($(which "$binary"))"
+            found=$((found+1))
+        else
+            echo -e "  ${RED}❌${NC} $display"
+        fi
+    done <<EOF
+claude|Claude Code
+codex|Codex CLI
+devin|Devin Terminal
+cursor|Cursor Agent
+gemini|Gemini CLI
+opencode|OpenCode
+qwen|Qwen Code
+qoder|Qoder CLI
+github-copilot-cli|GitHub Copilot CLI
+hermes|Hermes (ACP)
+kimi|Kimi CLI (ACP)
+pi|Pi (RPC)
+kiro|Kiro CLI (ACP)
+kilo|Kilo (ACP)
+mistral-vibe|Mistral Vibe CLI
+deepseek-tui|DeepSeek TUI
+homo|HOMO Runtime
+EOF
+    echo ""
+    echo -e "${YELLOW}已检测: ${found}/${total} 可用${NC}"
+    echo ""
+    echo -e "${BLUE}提示:${NC} 缺失的 Agent 可以通过 BYOK 代理模式使用。"
+    echo "      详见 https://github.com/nexu-io/open-design"
+}
+
+case "${1:-help}" in
+    json)    agents_json ;;
+    list)    agents_list ;;
+    *)
+        echo "HOMO Agent CLI Detection Tool"
+        echo ""
+        echo "用法:"
+        echo "  homo-detect list    列出所有 Agent CLI 检测结果"
+        echo "  homo-detect json    输出 JSON 格式"
+        echo ""
+        echo "检测 17 个 Agent CLI (16 标准 + HOMO 运行时)"
+        ;;
+esac

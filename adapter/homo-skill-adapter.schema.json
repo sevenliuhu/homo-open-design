@@ -1,0 +1,133 @@
+{
+  "name": "homo-skill-adapter",
+  "version": "1.0.0",
+  "description": "HOMO 智能体技能格式适配器 — 将 Open Design SKILL.md 桥接到 HOMO 215 个智能体部门体系",
+  "schema": {
+    "open-design-protocol": {
+      "version": "1.0",
+      "base": "Claude Code SKILL.md",
+      "extensions": {
+        "od": {
+          "description": "Open Design 扩展字段",
+          "fields": {
+            "mode": {
+              "type": "enum",
+              "values": ["prototype", "deck", "template", "design-system", "image", "video", "audio"],
+              "description": "技能模式"
+            },
+            "preview": {
+              "type": "object",
+              "properties": {
+                "type": {"type": "enum", "values": ["html", "jsx", "pptx", "markdown"]},
+                "entry": {"type": "string", "description": "预览入口文件路径"}
+              }
+            },
+            "design_system": {
+              "type": "object",
+              "properties": {
+                "requires": {"type": "boolean"},
+                "sections": {"type": "array", "items": {"type": "string"}}
+              }
+            },
+            "craft": {
+              "type": "object",
+              "properties": {
+                "requires": {"type": "array", "items": {"type": "string"}}
+              }
+            },
+            "inputs": {"type": "array", "description": "用户输入定义"},
+            "parameters": {"type": "array", "description": "可调参数"},
+            "outputs": {"type": "object", "description": "输出文件定义"},
+            "capabilities_required": {"type": "array", "items": {"type": "string"}}
+          }
+        }
+      }
+    },
+    "homo-extension": {
+      "name": "homo",
+      "version": "1.0",
+      "description": "HOMO 智能体系统扩展字段 — 将任意 SKILL.md 映射到 HOMO 部门体系",
+      "fields": {
+        "department": {
+          "type": "string",
+          "description": "所属 HOMO 部门名称",
+          "values": [
+            "产品设计部",
+            "品牌创意部",
+            "用户体验部",
+            "前端工程部",
+            "数据分析部",
+            "文案策划部",
+            "商务拓展部",
+            "运营设计部",
+            "视觉设计部",
+            "交互设计部",
+            "文档工程部",
+            "AI 应用部"
+          ]
+        },
+        "skill_group": {
+          "type": "string",
+          "description": "技能部门/组名"
+        },
+        "category": {
+          "type": "string",
+          "description": "场景分类",
+          "values": [
+            "原型设计",
+            "演示文稿",
+            "设计系统",
+            "图像生成",
+            "视频制作",
+            "前端开发",
+            "品牌创意",
+            "文案撰写",
+            "数据分析",
+            "动效设计",
+            "3D 设计",
+            "Figma 集成"
+          ]
+        },
+        "ai_required": {
+          "type": "integer",
+          "description": "需要的智能体数量（并行）",
+          "minimum": 1,
+          "maximum": 10,
+          "default": 1
+        },
+        "match_rules": {
+          "type": "array",
+          "description": "HOMO 智能体匹配规则",
+          "items": {
+            "type": "object",
+            "properties": {
+              "trigger": {"type": "string", "description": "触发关键词"},
+              "priority": {"type": "integer", "description": "优先级"}
+            }
+          }
+        }
+      }
+    },
+    "conversion-rules": {
+      "description": "SKILL.md → HOMO 部门技能格式的默认转换规则",
+      "mode_to_department": {
+        "prototype": "产品设计部",
+        "deck": "品牌创意部",
+        "template": "产品设计部",
+        "design-system": "品牌创意部",
+        "image": "视觉设计部",
+        "video": "视觉设计部",
+        "audio": "视觉设计部"
+      },
+      "mode_to_category": {
+        "prototype": "原型设计",
+        "deck": "演示文稿",
+        "template": "原型设计",
+        "design-system": "设计系统",
+        "image": "图像生成",
+        "video": "视频制作",
+        "audio": "动效设计"
+      }
+    }
+  }
+}

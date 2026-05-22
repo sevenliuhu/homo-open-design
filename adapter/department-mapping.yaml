@@ -1,0 +1,207 @@
+# HOMO 部门映射配置
+# 将 Open Design 134 个技能映射到 HOMO 10+ 部门体系
+
+# ==========================================
+# 部门定义
+# ==========================================
+departments:
+  - id: product-design
+    name: 产品设计部
+    description: 负责产品原型、界面、交互设计
+    icon: 🎨
+    skill_groups:
+      - id: landing-page
+        name: 着陆页设计组
+        skills: [saas-landing, marketing-landing, product-landing, paywall-upgrade-cro]
+      - id: dashboard
+        name: 数据可视化组
+        skills: [dashboard, data-report, finance-report, kanban-board]
+      - id: mobile
+        name: 移动端设计组
+        skills: [mobile-app, dating-web, flutter-animating-apps, swiftui-design]
+      - id: prototype
+        name: 原型设计组
+        skills: [web-prototype, wireframe-sketch, login-flow, empty-states]
+      - id: template
+        name: 模板设计组
+        skills: [frontend-slides, ppt-keynote, html-ppt-retro-quarterly-review]
+
+  - id: brand-creative
+    name: 品牌创意部
+    description: 负责品牌视觉、设计系统、创意方向
+    icon: 💡
+    skill_groups:
+      - id: design-system
+        name: 设计系统组
+        skills: [design-md, brand-guidelines, design-brief, design-consultation, design-review]
+      - id: editorial
+        name: 编辑排版组
+        skills: [article-magazine, poster-hero, field-notes-editorial-template, after-hours-editorial-template]
+      - id: deck
+        name: 演示文稿组
+        skills: [deck-guizang-editorial, deck-open-slide-canvas, deck-swiss-international, slides]
+      - id: direction
+        name: 创意方向组
+        skills: [creative-director, taste-skill, brainstorming]
+
+  - id: ux
+    name: 用户体验部
+    description: 负责用户体验研究、交互设计、用户界面
+    icon: 🔍
+    skill_groups:
+      - id: ui-design
+        name: 界面设计组
+        skills: [ui-ux-pro-max, ui-skills, platform-design, shadcn-ui, canvas-design]
+      - id: research
+        name: 用户研究组
+        skills: [design-review, swiss-user-research-video-template]
+      - id: figma
+        name: Figma 集成组
+        skills: [figma-use, figma-create-new-file, figma-generate-design, figma-generate-library, figma-implement-design, figma-code-connect-components, figma-create-design-system-rules]
+
+  - id: frontend
+    name: 前端工程部
+    description: 负责前端组件开发、动效实现
+    icon: ⚡
+    skill_groups:
+      - id: component
+        name: 组件研发组
+        skills: [frontend-design, frontend-dev, frontend-skill, shadcn-ui]
+      - id: animation
+        name: 动效开发组
+        skills: [gsap-core, gsap-react, gsap-scrolltrigger, gsap-timeline, threejs, shader-dev]
+      - id: d3
+        name: 数据可视化组
+        skills: [d3-visualization, frame-data-chart-nyt, frame-flowchart-sticky]
+
+  - id: data-analytics
+    name: 数据分析部
+    description: 负责数据可视化、报告设计
+    icon: 📊
+    skill_groups:
+      - id: report
+        name: 报告设计组
+        skills: [data-report, finance-report, team-okrs, eng-runbook]
+      - id: infographic
+        name: 信息图设计组
+        skills: [d3-visualization, frame-data-chart-nyt, hand-drawn-diagrams]
+
+  - id: copywriting
+    name: 文案策划部
+    description: 负责创意文案、营销内容
+    icon: ✍️
+    skill_groups:
+      - id: creative-copy
+        name: 创意文案组
+        skills: [copywriting, marketing-psychology, brainstorming]
+      - id: social
+        name: 社交媒体组
+        skills: [social-reddit-card, social-spotify-card, social-x-post-card, card-twitter, card-xiaohongshu]
+
+  - id: business
+    name: 商务拓展部
+    description: 负责提案设计、商业文档
+    icon: 💼
+    skill_groups:
+      - id: pitch
+        name: 提案设计组
+        skills: [deck-guizang-editorial, deck-open-slide-canvas, deck-swiss-international, slides]
+      - id: finance
+        name: 财务设计组
+        skills: [finance-report, invoice, paywall-upgrade-cro]
+
+  - id: operations
+    name: 运营设计部
+    description: 负责运营素材、活动页面
+    icon: 📱
+    skill_groups:
+      - id: social-media
+        name: 社交媒体设计组
+        skills: [social-carousel, social-reddit-card, social-x-post-card, card-xiaohongshu, card-twitter]
+      - id: ad-creative
+        name: 广告创意组
+        skills: [ad-creative, screenshots-marketing, competitive-ads-extractor]
+
+  - id: visual
+    name: 视觉设计部
+    description: 负责图像、视频、动效生成
+    icon: 🎬
+    skill_groups:
+      - id: image
+        name: 图像生成组
+        skills: [imagegen, imagen, sora, fal-generate, fal-image-edit, fal-3d, fal-upscale, fal-restore, fal-vision, venice-image-generate, venice-image-edit, pixelbin-media, image-enhancer]
+      - id: video
+        name: 视频制作组
+        skills: [video-hyperframes, fal-kling-o3, fal-video-edit, fal-realtime, fal-tryon, fal-lip-sync, venice-video, video-downloader, youtube-clipper, stitch-loop, remotion]
+      - id: audio
+        name: 音频制作组
+        skills: [speech, venice-audio-music, venice-audio-speech, ai-music-album]
+
+  - id: doc-engineering
+    name: 文档工程部
+    description: 负责文档生成、知识管理
+    icon: 📄
+    skill_groups:
+      - id: doc-gen
+        name: 文档生成组
+        skills: [doc, pdf, pptx, pptx-generator, pptx-html-fidelity-audit, mini-max-docx, minimax-pdf]
+      - id: release
+        name: 发布文档组
+        skills: [release-notes-one-pager, changelog]
+
+  - id: ai-apps
+    name: AI 应用部
+    description: 负责 AI 工具集成、智能体编排
+    icon: 🤖
+    skill_groups:
+      - id: agent-tools
+        name: 智能体工具组
+        skills: [agent-browser, browser-use, artifacts-builder, web-artifacts-builder]
+      - id: integration
+        name: AI 集成组
+        skills: [enhance-prompt, color-expert, theme-factory, design-md, taste-skill]
+
+# ==========================================
+# 路由规则
+# ==========================================
+routing:
+  mode_based:
+    prototype: product-design
+    deck: brand-creative
+    template: product-design
+    design-system: brand-creative
+    image: visual
+    video: visual
+    audio: visual
+
+  keyword_based:
+    - keyword: ["landing", "着陆页", "marketing page", "营销页"]
+      department: product-design
+      skill_group: landing-page
+    - keyword: ["dashboard", "仪表盘", "数据面板"]
+      department: product-design
+      skill_group: dashboard
+    - keyword: ["deck", "pitch", "presentation", "PPT", "投影片", "提案"]
+      department: brand-creative
+      skill_group: deck
+    - keyword: ["design system", "设计系统", "品牌规范", "DESIGN.md"]
+      department: brand-creative
+      skill_group: design-system
+    - keyword: ["image", "生成图片", "海报", "图片"]
+      department: visual
+      skill_group: image
+    - keyword: ["video", "视频", "短片", "动画"]
+      department: visual
+      skill_group: video
+    - keyword: ["figma", "Figma", "fig"]
+      department: ux
+      skill_group: figma
+    - keyword: ["gsap", "动画", "motion", "transition"]
+      department: frontend
+      skill_group: animation
+    - keyword: ["d3", "chart", "图表", "数据可视化"]
+      department: data-analytics
+      skill_group: report
+    - keyword: ["copy", "文案", "广告语", "slogan"]
+      department: copywriting
+      skill_group: creative-copy
