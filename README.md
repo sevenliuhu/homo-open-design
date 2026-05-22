@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.png" alt="HOMO Open Design" width="100%" />
+  <img src="assets/banner.svg" alt="HOMO Open Design" width="100%" />
 </p>
 
 <p align="center">
